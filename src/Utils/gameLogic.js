@@ -1,13 +1,15 @@
 import { BOARD_SIZE } from "../Constants/constants"
 
 export function createBoard() {
-    const arr = Array(0).fill(null).map(() => Array(0).fill(null))
+    console.log("Called createBoard()")
+    const arr = Array(4).fill(null).map(() => Array(4).fill(null))
     spawnTile(arr)
     spawnTile(arr)
     return arr
 }
 
 export function spawnTile(board) {
+    console.log("Called spawnTile()")
     const emptyCells = []
     
     for (let row = 0; row < BOARD_SIZE; row++) {
@@ -27,6 +29,7 @@ export function spawnTile(board) {
 }
 
 export function slideRow(row) {
+    console.log("Called slideRow()")
     const tiles = row.filter(val => val !== null)
     
     const mergedTiles = []
@@ -47,4 +50,35 @@ export function slideRow(row) {
     }
 
     return mergedTiles
+}
+
+function rotateBoardClockwise(board) {
+    console.log("Called rotateBoardClockwise()")
+    const boardSize = board.length
+    const rotatedBoard = Array(boardSize).fill(null).map(() => Array(boardSize).fill(null))
+    
+    for (let row = 0; row < boardSize; row++) {
+        for (let col = 0; col < boardSize; col++) {
+            rotatedBoard[col][boardSize - 1 - row] = board[row][col]
+        }
+    }
+
+    return rotatedBoard
+}
+
+export function moveBoard(board, direction) {
+    console.log("Called moveBoard()")
+    let rotatedBoard = board
+
+    if (direction === "up") rotatedBoard = rotateBoardClockwise(board)
+    if (direction === "right") rotatedBoard = rotateBoardClockwise(rotateBoardClockwise(board))
+    if (direction === "down") rotatedBoard = rotateBoardClockwise(rotateBoardClockwise(rotateBoardClockwise(board)))
+    
+    const movedBoard = rotatedBoard.map(row => slideRow(row))
+    
+    if (direction === "up") return rotateBoardClockwise(rotateBoardClockwise(rotateBoardClockwise(movedBoard)))
+    if (direction === "right") return rotateBoardClockwise(rotateBoardClockwise(movedBoard))
+    if (direction === "down") return rotateBoardClockwise(movedBoard)
+
+    return movedBoard
 }
