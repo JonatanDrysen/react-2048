@@ -25,3 +25,26 @@ export function spawnTile(board) {
 
     return board
 }
+
+export function slideRow(row) {
+    const tiles = row.filter(val => val !== null)
+    
+    const mergedTiles = []
+    let i = 0
+
+    while (i < tiles.length) {
+        if (tiles[i] === tiles[i + 1]) {
+            mergedTiles.push(tiles[i] * 2)
+            i += 2
+        } else {
+            mergedTiles.push(tiles[i])
+            i += 1
+        }
+    }
+
+    while (mergedTiles.length < BOARD_SIZE) {
+        mergedTiles.push(null)
+    }
+
+    return mergedTiles
+}
