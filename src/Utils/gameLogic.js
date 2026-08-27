@@ -1,4 +1,4 @@
-import { BOARD_SIZE } from "../Constants/constants"
+import { BOARD_SIZE, WIN_TILE } from "../Constants/constants"
 
 export function createBoard() {
     console.log("Called createBoard()")
@@ -81,4 +81,24 @@ export function moveBoard(board, direction) {
     if (direction === "down") return rotateBoardClockwise(movedBoard)
 
     return movedBoard
+}
+
+export function checkWin(board) {
+    for (let row = 0; row < BOARD_SIZE; row++) {
+        for (let col = 0; col < BOARD_SIZE; col++) {
+            if (board[row][col] === WIN_TILE) return true
+        }
+    }
+    return false
+}
+
+export function checkLoss(board) {
+    for (let row = 0; row < BOARD_SIZE; row++) {
+        for (let col = 0; col < BOARD_SIZE; col++) {
+            if (board[row][col] === null) return false
+            if (row + 1 < BOARD_SIZE && board[row + 1][col] === board[row][col]) return false
+            if (col + 1 < BOARD_SIZE && board[row][col] === board[row][col + 1]) return false
+        }
+    }
+    return true
 }
